@@ -89,11 +89,11 @@ ventana.title("PDF DOG")
 ventana.geometry("800x500")
 
 marco_superior=tkinter.Frame(ventana)
-marco_superior.pack (side = tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10))
+marco_superior.pack (side = tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10),padx=(10,10))
 marco_inferior=tkinter.Frame(ventana)
-marco_inferior.pack (side = tkinter.TOP, fill = tkinter.BOTH, expand=tkinter.YES, pady=(10,10))
+marco_inferior.pack (side = tkinter.TOP, fill = tkinter.BOTH, expand=tkinter.YES, pady=(10,0),padx=(10,10))
 marco_fondo=tkinter.Frame(ventana)
-marco_fondo.pack (side = tkinter.BOTTOM, fill = tkinter.BOTH, expand=tkinter.YES, pady=(10,10))
+marco_fondo.pack (side = tkinter.BOTTOM, fill = tkinter.BOTH, expand=tkinter.YES, pady=(0,10), padx=(10,10))
 
 #		lado izquierdo
 marco_izquierdo= tkinter.Frame(marco_superior)
@@ -128,7 +128,7 @@ marco_inferior_izquierdo.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=tkint
 marco_inferior_derecho=tkinter.Frame(marco_inferior)
 marco_inferior_derecho.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=tkinter.YES)
 
-etiqueta_entry_url=tkinter.Label(marco_inferior_izquierdo,text="ruta y nombre del pdf a generar:")
+etiqueta_entry_url=tkinter.Label(marco_inferior_izquierdo,text="Ruta y nombre del pdf a generar:")
 etiqueta_entry_url.pack( side = tkinter.TOP, anchor=tkinter.W, pady=(0,0))
 entry_url=tkinter.Entry(marco_inferior_izquierdo, width=95)
 entry_url.pack( side = tkinter.TOP, anchor=tkinter.W)
@@ -140,7 +140,7 @@ boton_examinar.pack(side = tkinter.TOP, anchor=tkinter.E, pady=(15,0), padx=(0,1
 #		fondo	(log y scrollbar)
 etiqueta_logbox=tkinter.Label(marco_fondo,text="Log:")
 etiqueta_logbox.pack( side = tkinter.TOP, anchor=tkinter.W)
-logbox=tkinter.Text(marco_fondo,height=3,width = 95)
+logbox=tkinter.Text(marco_fondo,height=5,width = 95)
 logbox.pack(side =tkinter.LEFT, fill = tkinter.BOTH, expand=tkinter.YES)
 scrollbar_logbox = tkinter.Scrollbar(marco_fondo)
 scrollbar_logbox.pack(side = tkinter.RIGHT, fill = tkinter.BOTH)
