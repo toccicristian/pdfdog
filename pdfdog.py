@@ -78,7 +78,7 @@ licencias['textow']="""
     """
 
 import tkinter
-
+import os
 
 
 #####################################################################################
@@ -86,7 +86,7 @@ import tkinter
 #####################################################################################
 ventana=tkinter.Tk()
 ventana.title("PDF DOG")
-ventana.geometry("800x500")
+ventana.geometry("800x600")
 
 marco_superior=tkinter.Frame(ventana)
 marco_superior.pack (side = tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10),padx=(10,10))
@@ -110,15 +110,25 @@ scrollbar_pdfs.config(command = listbox_pdfs.yview)
 marco_derecho= tkinter.Frame(marco_superior)
 marco_derecho.pack( side = tkinter.RIGHT, fill=tkinter.BOTH, anchor=tkinter.N)
 #				botones:
-boton_agregar=tkinter.Button(marco_derecho,text="Agregar PDF")
+#					agregar y quitar pdf
+imagen_boton_agregar=tkinter.PhotoImage(file=os.path.normpath('./res/pdfadd-64x64.png'))
+#boton_agregar=tkinter.Button(marco_derecho,text="Agregar PDF")
+boton_agregar=tkinter.Button(marco_derecho,image=imagen_boton_agregar)
 boton_agregar.pack( side = tkinter.TOP, anchor=tkinter.E, pady=(10,0),padx=(20,10))
-boton_quitar=tkinter.Button(marco_derecho,text="Quitar PDF")
+imagen_boton_quitar=tkinter.PhotoImage(file=os.path.normpath('./res/pdfremove-64x64.png'))
+boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar)
+#boton_quitar=tkinter.Button(marco_derecho,text="Quitar PDF")
 boton_quitar.pack( side = tkinter.TOP, anchor=tkinter.E,padx=(0,10))
-boton_subir=tkinter.Button(marco_derecho,text="^")
+#					de ordenamiento:
+imagen_boton_subir=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_up.png'))
+boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir)
 boton_subir.pack( side = tkinter.TOP, anchor=tkinter.E, pady=(40,0), padx=(0,10))
-boton_bajar=tkinter.Button(marco_derecho,text="v")
+imagen_boton_bajar=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_down.png'))
+boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar)
 boton_bajar.pack( side = tkinter.TOP, anchor=tkinter.E, padx=(0,10))
-boton_dog=tkinter.Button(marco_derecho,text="DOG!")
+#					de concatenar (boton 'DOG'):
+imagen_boton_dog=tkinter.PhotoImage(file=os.path.normpath('./res/button_dog.png'))
+boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
 boton_dog.pack( side = tkinter.BOTTOM, anchor=tkinter.E, pady=(40,10), padx=(0,10))
 
 
