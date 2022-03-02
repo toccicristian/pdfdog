@@ -127,7 +127,7 @@ imagen_boton_bajar=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_down.pn
 boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar)
 boton_bajar.pack( side = tkinter.TOP, anchor=tkinter.E, padx=(0,10))
 #					de concatenar (boton 'DOG'):
-imagen_boton_dog=tkinter.PhotoImage(file=os.path.normpath('./res/button_dog.png'))
+imagen_boton_dog=tkinter.PhotoImage(file=os.path.normpath('./res/dogface-64x64.png'))
 boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
 boton_dog.pack( side = tkinter.BOTTOM, anchor=tkinter.E, pady=(40,10), padx=(0,10))
 
