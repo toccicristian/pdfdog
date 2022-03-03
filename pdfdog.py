@@ -77,8 +77,42 @@ licencias['textow']="""
     the Program in return for a fee.
     """
 
+
 import tkinter
+from tkinter import filedialog
 import os
+
+
+browser_dir_inicial='~'
+
+
+def loguea(logbox,linea=str()):
+        logbox.insert(tkinter.END, linea)
+        logbox.see(tkinter.END)
+
+
+def file_browser():
+        tipos=(
+                ('archivos pdf','*.pdf'),
+                ('Todos los archivos','*.*')
+        )
+        archivo_url = filedialog.askopenfilename(
+                initialdir = os.path.expanduser(os.path.normpath(browser_dir_inicial)),
+                title='Agregar PDF...',
+                filetypes=(tipos)
+        )
+        return archivo_url
+
+
+def agregarpdf(listbox_pdfs,logbox):
+        archivo_url=file_browser()
+        if archivo_url:
+                listbox_pdfs.insert(tkinter.END, archivo_url)
+                listbox_pdfs.see(tkinter.END)
+                listbox_pdfs.selection_clear(0,tkinter.END)
+                listbox_pdfs.selection_set(tkinter.END)
+                browser_dir_inicial=os.path.dirname(archivo_url)
+                loguea(logbox,'Archivo agregado: '+str(archivo_url))
 
 
 #####################################################################################
@@ -88,71 +122,68 @@ ventana=tkinter.Tk()
 ventana.title("PDF DOG")
 ventana.geometry("800x600")
 
+#               DEFINICIONES 
+print('cargando marcos')
 marco_superior=tkinter.Frame(ventana)
-marco_superior.pack (side = tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10),padx=(10,10))
 marco_inferior=tkinter.Frame(ventana)
-marco_inferior.pack (side = tkinter.TOP, fill = tkinter.BOTH, expand=tkinter.YES, pady=(10,0),padx=(10,10))
 marco_fondo=tkinter.Frame(ventana)
-marco_fondo.pack (side = tkinter.BOTTOM, fill = tkinter.BOTH, expand=tkinter.YES, pady=(0,10), padx=(10,10))
-
-#		lado izquierdo
 marco_izquierdo= tkinter.Frame(marco_superior)
-marco_izquierdo.pack ( side = tkinter.LEFT , fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10))
-#				  LISTBOX CON SCROLLBAR
+marco_derecho= tkinter.Frame(marco_superior)
+marco_inferior_izquierdo=tkinter.Frame(marco_inferior)
+marco_inferior_derecho=tkinter.Frame(marco_inferior)
+print("cargando listbox y scrollbar")
 listbox_pdfs = tkinter.Listbox(marco_izquierdo)
-listbox_pdfs.pack(side = tkinter.LEFT, fill = tkinter.BOTH, expand=tkinter.YES)
 scrollbar_pdfs = tkinter.Scrollbar(marco_izquierdo)
+print("cargando cargando logbox")
+etiqueta_logbox=tkinter.Label(marco_fondo,text="Log:")
+logbox=tkinter.Text(marco_fondo,height=5,width = 95)
+scrollbar_logbox = tkinter.Scrollbar(marco_fondo)
+print("cargando imagenes")
+imagen_boton_agregar=tkinter.PhotoImage(file=os.path.normpath('./res/pdfadd-64x64.png'))
+imagen_boton_quitar=tkinter.PhotoImage(file=os.path.normpath('./res/pdfremove-64x64.png'))
+imagen_boton_subir=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_up.png'))
+imagen_boton_bajar=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_down.png'))
+imagen_boton_dog=tkinter.PhotoImage(file=os.path.normpath('./res/olicara-64x64.png'))
+print("cargando botones")
+boton_agregar=tkinter.Button(marco_derecho,image=imagen_boton_agregar,command=lambda : agregarpdf(listbox_pdfs,logbox))
+boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar)
+boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir)
+boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar)
+boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
+boton_examinar=tkinter.Button(marco_inferior_derecho,text="Examinar...")
+print("cargando el resto")
+etiqueta_entry_url=tkinter.Label(marco_inferior_izquierdo,text="Ruta y nombre del pdf a generar:")
+entry_url=tkinter.Entry(marco_inferior_izquierdo, width=95)
+print('cargadas las definiciones; Presentando objetos...')
+
+#               PACKS
+marco_superior.pack (side = tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10),padx=(10,10))
+marco_inferior.pack (side = tkinter.TOP, fill = tkinter.BOTH, expand=tkinter.YES, pady=(10,0),padx=(10,10))
+marco_fondo.pack (side = tkinter.BOTTOM, fill = tkinter.BOTH, expand=tkinter.YES, pady=(0,10), padx=(10,10))
+#		                     lado izquierdo
+marco_izquierdo.pack ( side = tkinter.LEFT , fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10))
+#				                   LISTBOX CON SCROLLBAR
+listbox_pdfs.pack(side = tkinter.LEFT, fill = tkinter.BOTH, expand=tkinter.YES)
 scrollbar_pdfs.pack(side = tkinter.RIGHT, fill = tkinter.BOTH)
 listbox_pdfs.config(yscrollcommand = scrollbar_pdfs.set)
 scrollbar_pdfs.config(command = listbox_pdfs.yview)
-
 #		lado derecho
-marco_derecho= tkinter.Frame(marco_superior)
 marco_derecho.pack( side = tkinter.RIGHT, fill=tkinter.BOTH, anchor=tkinter.N)
 #				botones:
-#					agregar y quitar pdf
-imagen_boton_agregar=tkinter.PhotoImage(file=os.path.normpath('./res/pdfadd-64x64.png'))
-#boton_agregar=tkinter.Button(marco_derecho,text="Agregar PDF")
-boton_agregar=tkinter.Button(marco_derecho,image=imagen_boton_agregar)
 boton_agregar.pack( side = tkinter.TOP, anchor=tkinter.E, pady=(10,0),padx=(20,10))
-imagen_boton_quitar=tkinter.PhotoImage(file=os.path.normpath('./res/pdfremove-64x64.png'))
-boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar)
-#boton_quitar=tkinter.Button(marco_derecho,text="Quitar PDF")
 boton_quitar.pack( side = tkinter.TOP, anchor=tkinter.E,padx=(0,10))
-#					de ordenamiento:
-imagen_boton_subir=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_up.png'))
-boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir)
 boton_subir.pack( side = tkinter.TOP, anchor=tkinter.E, pady=(40,0), padx=(0,10))
-imagen_boton_bajar=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_down.png'))
-boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar)
 boton_bajar.pack( side = tkinter.TOP, anchor=tkinter.E, padx=(0,10))
-#					de concatenar (boton 'DOG'):
-imagen_boton_dog=tkinter.PhotoImage(file=os.path.normpath('./res/olicara-64x64.png'))
-boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
 boton_dog.pack( side = tkinter.BOTTOM, anchor=tkinter.E, pady=(40,10), padx=(0,10))
-
-
 #		abajo
-marco_inferior_izquierdo=tkinter.Frame(marco_inferior)
 marco_inferior_izquierdo.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=tkinter.YES)
-marco_inferior_derecho=tkinter.Frame(marco_inferior)
 marco_inferior_derecho.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=tkinter.YES)
-
-etiqueta_entry_url=tkinter.Label(marco_inferior_izquierdo,text="Ruta y nombre del pdf a generar:")
 etiqueta_entry_url.pack( side = tkinter.TOP, anchor=tkinter.W, pady=(0,0))
-entry_url=tkinter.Entry(marco_inferior_izquierdo, width=95)
 entry_url.pack( side = tkinter.TOP, anchor=tkinter.W)
-boton_examinar=tkinter.Button(marco_inferior_derecho,text="Examinar...")
 boton_examinar.pack(side = tkinter.TOP, anchor=tkinter.E, pady=(15,0), padx=(0,10))
-
-
-
 #		fondo	(log y scrollbar)
-etiqueta_logbox=tkinter.Label(marco_fondo,text="Log:")
 etiqueta_logbox.pack( side = tkinter.TOP, anchor=tkinter.W)
-logbox=tkinter.Text(marco_fondo,height=5,width = 95)
 logbox.pack(side =tkinter.LEFT, fill = tkinter.BOTH, expand=tkinter.YES)
-scrollbar_logbox = tkinter.Scrollbar(marco_fondo)
 scrollbar_logbox.pack(side = tkinter.RIGHT, fill = tkinter.BOTH)
 logbox.config(yscrollcommand = scrollbar_logbox.set)
 scrollbar_logbox.config(command = logbox.yview)
@@ -167,16 +198,4 @@ logbox.insert(tkinter.END, licencias['gplv3'])
 ventana.mainloop()
 
 # TODO : trabajar sobre el show w de los argumentos
-
-
-#EJEMPLOS
-#for values in range (100):
-#	listbox_pdfs.insert(tkinter.END, values)
-#	listbox_pdfs.see(tkinter.END)
-#	listbox_pdfs.selection_clear(0,tkinter.END)
-#	listbox_pdfs.selection_set(tkinter.END)
-#
-#logbox.insert(tkinter.END, licencias['gplv3'])
-#logbox.see(tkinter.END)
-#ventana.mainloop()
 
