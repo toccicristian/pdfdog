@@ -109,10 +109,10 @@ def agregarpdf(listbox_pdfs,logbox):
         for archivo_url in archivo_urls:
                 listbox_pdfs.insert(tkinter.END, archivo_url)
                 listbox_pdfs.see(tkinter.END)
-                listbox_pdfs.selection_clear(0,tkinter.END)
-                listbox_pdfs.selection_set(tkinter.END)
-                loguea(logbox,'Archivo agregado: '+str(archivo_url))
-        #indice_insercion=tkinter.END
+#                listbox_pdfs.selection_clear(0,tkinter.END)
+#                listbox_pdfs.selection_set(tkinter.END)
+                loguea(logbox,'Archivo agregado: '+str(archivo_url)+'\n')
+        #indice_insercion=tkinter.END                           # TODO : INICIO DE VOLAR ESTO A LA MIERDA
         #print(len(listbox_pdfs.curselection()))
         #if len(listbox_pdfs.curselection())>0:
         #        indice_insercion=listbox_pdfs.curselection()[0]+1
@@ -125,7 +125,13 @@ def agregarpdf(listbox_pdfs,logbox):
         #                listbox_pdfs.see(indice_seleccion)
         #                listbox_pdfs.selection_clear(0,tkinter.END)
         #                listbox_pdfs.selection_set(indice_seleccion)
-        #        loguea(logbox,'Archivo agregado: '+str(archivo_url))
+        #        loguea(logbox,'Archivo agregado: '+str(archivo_url))      #FIN DE VOLAR A LA MIERDA
+
+
+def quitarpdf(listbox_pdfs,logbox):
+        for i in listbox_pdfs.curselection()[::-1]:
+                loguea(logbox,'Quitar :'+str(listbox_pdfs.get(i))+'\n')
+                listbox_pdfs.delete(i)
 
 
 #####################################################################################
@@ -145,7 +151,7 @@ marco_derecho= tkinter.Frame(marco_superior)
 marco_inferior_izquierdo=tkinter.Frame(marco_inferior)
 marco_inferior_derecho=tkinter.Frame(marco_inferior)
 print("cargando listbox y scrollbar")
-listbox_pdfs = tkinter.Listbox(marco_izquierdo)
+listbox_pdfs = tkinter.Listbox(marco_izquierdo, selectmode="multiple")
 scrollbar_pdfs = tkinter.Scrollbar(marco_izquierdo)
 print("cargando cargando logbox")
 etiqueta_logbox=tkinter.Label(marco_fondo,text="Log:")
@@ -159,7 +165,7 @@ imagen_boton_bajar=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_down.pn
 imagen_boton_dog=tkinter.PhotoImage(file=os.path.normpath('./res/olicara-64x64.png'))
 print("cargando botones")
 boton_agregar=tkinter.Button(marco_derecho,image=imagen_boton_agregar,command=lambda : agregarpdf(listbox_pdfs,logbox))
-boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar)
+boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar, command=lambda : quitarpdf(listbox_pdfs,logbox))
 boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir)
 boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar)
 boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
