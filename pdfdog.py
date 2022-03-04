@@ -128,6 +128,12 @@ def agregarpdf(listbox_pdfs,logbox):
         #        loguea(logbox,'Archivo agregado: '+str(archivo_url))      #FIN DE VOLAR A LA MIERDA
 
 
+def quitarpdf(listbox_pdfs,logbox):
+        for i in listbox_pdfs.curselection()[::-1]:
+                loguea(logbox,'Quitar :'+str(listbox_pdfs.get(i))+'\n')
+                listbox_pdfs.delete(i)
+
+
 #####################################################################################
 #			GUI :
 #####################################################################################
@@ -159,7 +165,7 @@ imagen_boton_bajar=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_down.pn
 imagen_boton_dog=tkinter.PhotoImage(file=os.path.normpath('./res/olicara-64x64.png'))
 print("cargando botones")
 boton_agregar=tkinter.Button(marco_derecho,image=imagen_boton_agregar,command=lambda : agregarpdf(listbox_pdfs,logbox))
-boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar)
+boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar, command=lambda : quitarpdf(listbox_pdfs,logbox))
 boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir)
 boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar)
 boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
