@@ -96,8 +96,8 @@ def file_browser():
                 ('archivos pdf','*.pdf'),
                 ('Todos los archivos','*.*')
         )
-        archivo_url = filedialog.askopenfilename(
-                #initialdir = os.path.expanduser(os.path.normpath(browser_dir_inicial)),
+        archivo_url = filedialog.askopenfilenames(
+                #initialdir = os.path.expanduser(os.path.normpath(browser_dir_inicial)), #esto inicia en '~' pero olvida ultimo directorio
                 title='Agregar PDF...',
                 filetypes=(tipos)
         )
@@ -105,12 +105,13 @@ def file_browser():
 
 
 def agregarpdf(listbox_pdfs,logbox):
-        archivo_url=file_browser()
-        listbox_pdfs.insert(tkinter.END, archivo_url)
-        listbox_pdfs.see(tkinter.END)
-        listbox_pdfs.selection_clear(0,tkinter.END)
-        listbox_pdfs.selection_set(tkinter.END)
-        loguea(logbox,'Archivo agregado: '+str(archivo_url))
+        archivo_urls=file_browser()
+        for archivo_url in archivo_urls:
+                listbox_pdfs.insert(tkinter.END, archivo_url)
+                listbox_pdfs.see(tkinter.END)
+                listbox_pdfs.selection_clear(0,tkinter.END)
+                listbox_pdfs.selection_set(tkinter.END)
+                loguea(logbox,'Archivo agregado: '+str(archivo_url))
         #indice_insercion=tkinter.END
         #print(len(listbox_pdfs.curselection()))
         #if len(listbox_pdfs.curselection())>0:
