@@ -134,6 +134,49 @@ def quitarpdf(listbox_pdfs,logbox):
                 listbox_pdfs.delete(i)
 
 
+def moverarriba(listbox_pdfs,logbox):
+        indices_seleccion=listbox_pdfs.curselection()
+        if not indices_seleccion:
+                return
+        for posicion in indices_seleccion:
+                if posicion == 0:
+                        return
+                contenido=listbox_pdfs.get(posicion)
+                listbox_pdfs.delete(posicion)
+                listbox_pdfs.insert(posicion-1,contenido)
+        listbox_pdfs.selection_clear(0,tkinter.END)
+        for indice in indices_seleccion:
+                listbox_pdfs.selection_set(indice-1)
+        listbox_pdfs.see(indices_seleccion[0]-1)
+
+
+def moverabajo(listbox_pdfs,logbox):
+        indices_seleccion=listbox_pdfs.curselection()
+        if not indices_seleccion:
+                return
+        if indices_seleccion[-1] == listbox_pdfs.size()-1:
+                return
+        for posicion in indices_seleccion[::-1]:
+                contenido = listbox_pdfs.get(posicion)
+                listbox_pdfs.delete(posicion)
+                listbox_pdfs.insert(posicion+1,contenido)
+        listbox_pdfs.selection_clear(0,tkinter.END)
+        for indice in indices_seleccion:
+                listbox_pdfs.selection_set(indice+1)
+        listbox_pdfs.see(indices_seleccion[-1]+1)
+
+
+def test_listbox(listbox_pdfs,logbox):
+        lista_items=[]
+        for x in range (1,36):
+                lista_items.append(x)
+        loguea(logbox,'Poblando la lista')
+        for item in lista_items:
+                listbox_pdfs.insert(tkinter.END,item)
+                loguea(logbox,'.')
+        loguea(logbox,'[OK]\n')
+
+
 #####################################################################################
 #			GUI :
 #####################################################################################
@@ -142,7 +185,6 @@ ventana.title("PDF DOG")
 ventana.geometry("800x600")
 
 #               DEFINICIONES 
-print('cargando marcos')
 marco_superior=tkinter.Frame(ventana)
 marco_inferior=tkinter.Frame(ventana)
 marco_fondo=tkinter.Frame(ventana)
@@ -150,30 +192,24 @@ marco_izquierdo= tkinter.Frame(marco_superior)
 marco_derecho= tkinter.Frame(marco_superior)
 marco_inferior_izquierdo=tkinter.Frame(marco_inferior)
 marco_inferior_derecho=tkinter.Frame(marco_inferior)
-print("cargando listbox y scrollbar")
 listbox_pdfs = tkinter.Listbox(marco_izquierdo, selectmode="multiple")
 scrollbar_pdfs = tkinter.Scrollbar(marco_izquierdo)
-print("cargando cargando logbox")
 etiqueta_logbox=tkinter.Label(marco_fondo,text="Log:")
 logbox=tkinter.Text(marco_fondo,height=5,width = 95)
 scrollbar_logbox = tkinter.Scrollbar(marco_fondo)
-print("cargando imagenes")
 imagen_boton_agregar=tkinter.PhotoImage(file=os.path.normpath('./res/pdfadd-64x64.png'))
 imagen_boton_quitar=tkinter.PhotoImage(file=os.path.normpath('./res/pdfremove-64x64.png'))
 imagen_boton_subir=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_up.png'))
 imagen_boton_bajar=tkinter.PhotoImage(file=os.path.normpath('./res/arrow_down.png'))
 imagen_boton_dog=tkinter.PhotoImage(file=os.path.normpath('./res/olicara-64x64.png'))
-print("cargando botones")
-boton_agregar=tkinter.Button(marco_derecho,image=imagen_boton_agregar,command=lambda : agregarpdf(listbox_pdfs,logbox))
-boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar, command=lambda : quitarpdf(listbox_pdfs,logbox))
-boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir)
-boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar)
+boton_agregar=tkinter.Button(marco_derecho,image=imagen_boton_agregar,command = lambda : agregarpdf(listbox_pdfs,logbox))
+boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar, command = lambda : quitarpdf(listbox_pdfs,logbox))
+boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir, command = lambda : moverarriba(listbox_pdfs,logbox))
+boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar, command = lambda : moverabajo(listbox_pdfs,logbox))
 boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
 boton_examinar=tkinter.Button(marco_inferior_derecho,text="Examinar...")
-print("cargando el resto")
 etiqueta_entry_url=tkinter.Label(marco_inferior_izquierdo,text="Ruta y nombre del pdf a generar:")
 entry_url=tkinter.Entry(marco_inferior_izquierdo, width=95)
-print('cargadas las definiciones; Presentando objetos...')
 
 #               PACKS
 marco_superior.pack (side = tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10),padx=(10,10))
@@ -214,6 +250,10 @@ scrollbar_logbox.config(command = logbox.yview)
 
 
 logbox.insert(tkinter.END, licencias['gplv3'])
+
+#test_listbox(listbox_pdfs,logbox)
+
+
 ventana.mainloop()
 
 # TODO : trabajar sobre el show w de los argumentos
