@@ -84,6 +84,8 @@ import os
 
 
 browser_dir_inicial='~'
+pdf_salida_defaultdir='~'
+pdf_salida_default='output.pdf'
 
 
 def loguea(logbox,linea=str()):
@@ -102,6 +104,15 @@ def file_browser():
                 filetypes=(tipos)
         )
         return archivo_url
+
+
+def directory_browser(titulo=str(),defaultdir=str()):
+        if not titulo:
+                titulo='Seleccione directorio destino...'
+        directorio=filedialog.askdirectory(title=titulo)
+        if not directorio:
+               directorio=defaultdir 
+        return os.path.expanduser(os.path.normpath(directorio))
 
 
 def agregarpdf(listbox_pdfs,logbox):
@@ -166,6 +177,20 @@ def moverabajo(listbox_pdfs,logbox):
         listbox_pdfs.see(indices_seleccion[-1]+1)
 
 
+def examinar(entry_url,logbox):
+        head_url=os.path.expanduser(os.path.normpath(pdf_salida_defaultdir))
+        tail_url=os.path.expanduser(os.path.normpath(pdf_salida_default))
+        if len(entry_url.get()) != 0:
+                head_url=os.path.split(os.path.expanduser(os.path.normpath(entry_url.get())))[0]
+                tail_url=os.path.split(os.path.expanduser(os.path.normpath(entry_url.get())))[1]
+        directorio_seleccionado=directory_browser('Seleccione directorio para '+tail_url,head_url)
+        entry_url.delete(0,tkinter.END)
+        if not directorio_seleccionado:
+                directorio_seleccionado = head_url
+        entry_url.insert(tkinter.END, os.path.join(directorio_seleccionado,tail_url))
+        return
+
+
 def test_listbox(listbox_pdfs,logbox):
         lista_items=[]
         for x in range (1,36):
@@ -207,9 +232,9 @@ boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar, command = l
 boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir, command = lambda : moverarriba(listbox_pdfs,logbox))
 boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar, command = lambda : moverabajo(listbox_pdfs,logbox))
 boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
-boton_examinar=tkinter.Button(marco_inferior_derecho,text="Examinar...")
 etiqueta_entry_url=tkinter.Label(marco_inferior_izquierdo,text="Ruta y nombre del pdf a generar:")
 entry_url=tkinter.Entry(marco_inferior_izquierdo, width=95)
+boton_examinar=tkinter.Button(marco_inferior_derecho,text="Examinar...", command = lambda : examinar(entry_url,logbox))
 
 #               PACKS
 marco_superior.pack (side = tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, pady=(10,10),padx=(10,10))
@@ -250,6 +275,8 @@ scrollbar_logbox.config(command = logbox.yview)
 
 
 logbox.insert(tkinter.END, licencias['gplv3'])
+entry_url.insert(tkinter.END,os.path.expanduser(os.path.normpath(os.path.join(pdf_salida_defaultdir,pdf_salida_default))))
+
 
 #test_listbox(listbox_pdfs,logbox)
 
