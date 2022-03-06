@@ -81,7 +81,7 @@ licencias['textow']="""
 import tkinter
 from tkinter import filedialog
 import os
-
+import PyPDF2
 
 browser_dir_inicial='~'
 pdf_salida_defaultdir='~'
@@ -191,6 +191,25 @@ def examinar(entry_url,logbox):
         return
 
 
+def pdfdog (listbox_pdf,entry_url,logbox):
+        head_url=os.path.split(os.path.expanduser(os.path.normpath(entry_url.get())))[0]
+        tail_url=os.path.split(os.path.expanduser(os.path.normpath(entry_url.get())))[1]
+        if (not head_url) or (not tail_url) or (not os.path.isdir(os.path.expanduser(os.path.normpath(head_url)))):
+                return
+        lista_pdfs=[]        
+        for i in range (0,listbox_pdfs.size()):
+                lista_pdfs.append(listbox_pdfs.get(i))      
+        loguea(logbox,'Concatenando ('+str(len(lista_pdfs))+')')   
+        merger=PyPDF2.PdfFileMerger()
+        for pdf_url in lista_pdfs:
+                merger.append(PyPDF2.PdfFileReader(open(pdf_url,'rb')))
+                loguea(logbox,'.')
+        merger.write(os.path.join(head_url,tail_url))
+        loguea(logbox,'[LISTO]')
+        
+#####################################################################################
+#			TESTS :
+#####################################################################################
 def test_listbox(listbox_pdfs,logbox):
         lista_items=[]
         for x in range (1,36):
@@ -200,6 +219,15 @@ def test_listbox(listbox_pdfs,logbox):
                 listbox_pdfs.insert(tkinter.END,item)
                 loguea(logbox,'.')
         loguea(logbox,'[OK]\n')
+
+
+def test_pdfdog(listbox_pdfs,entry_url,logbox):
+        for root,dirs,files in os.walk('./examples',topdown=False):
+                for nombre in files:
+                        listbox_pdfs.insert(tkinter.END,os.path.join(root,nombre))
+        entry_url.delete(0,tkinter.END)
+        entry_url.insert(tkinter.END, './examples/salida.pdf')
+        pdfdog (listbox_pdfs,entry_url,logbox)
 
 
 #####################################################################################
@@ -231,7 +259,7 @@ boton_agregar=tkinter.Button(marco_derecho,image=imagen_boton_agregar,command = 
 boton_quitar=tkinter.Button(marco_derecho,image=imagen_boton_quitar, command = lambda : quitarpdf(listbox_pdfs,logbox))
 boton_subir=tkinter.Button(marco_derecho, image=imagen_boton_subir, command = lambda : moverarriba(listbox_pdfs,logbox))
 boton_bajar=tkinter.Button(marco_derecho,image=imagen_boton_bajar, command = lambda : moverabajo(listbox_pdfs,logbox))
-boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog)
+boton_dog=tkinter.Button(marco_derecho,image=imagen_boton_dog, command = lambda : pdfdog (listbox_pdfs,entry_url,logbox))
 etiqueta_entry_url=tkinter.Label(marco_inferior_izquierdo,text="Ruta y nombre del pdf a generar:")
 entry_url=tkinter.Entry(marco_inferior_izquierdo, width=95)
 boton_examinar=tkinter.Button(marco_inferior_derecho,text="Examinar...", command = lambda : examinar(entry_url,logbox))
@@ -279,8 +307,7 @@ entry_url.insert(tkinter.END,os.path.expanduser(os.path.normpath(os.path.join(pd
 
 
 #test_listbox(listbox_pdfs,logbox)
-
-
+#test_pdfdog(listbox_pdfs,entry_url,logbox)
 ventana.mainloop()
 
 # TODO : trabajar sobre el show w de los argumentos
