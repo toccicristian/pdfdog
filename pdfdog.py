@@ -21,7 +21,7 @@ licencias['gplv3']="""
     This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
     This is free software, and you are welcome to redistribute it
     under certain conditions; See COPYING.odt file for further details.
-    """
+"""
 licencias['gplv3logo']="""
 +----------------------------------------------------------------------------------------------------+
 |oooooooo+~~~+~~~~~~+~~~~~+~~~~+~~~~~~+~~~~+~~~~~~+~~+~~~~+~~~~~+~~~~+~~~~~~++~~+~~+~~~~~~:  ::::::~+|
@@ -81,7 +81,7 @@ licencias['textow']="""
 import tkinter
 from tkinter import filedialog
 import os
-import PyPDF2
+import pikepdf
 
 browser_dir_inicial='~'
 pdf_salida_defaultdir='~'
@@ -195,17 +195,23 @@ def pdfdog (listbox_pdf,entry_url,logbox):
         head_url=os.path.split(os.path.expanduser(os.path.normpath(entry_url.get())))[0]
         tail_url=os.path.split(os.path.expanduser(os.path.normpath(entry_url.get())))[1]
         if (not head_url) or (not tail_url) or (not os.path.isdir(os.path.expanduser(os.path.normpath(head_url)))):
+                loguea(logbox,'***No se ha generado ningún pdf: Ruta de destino no válida.\n')
                 return
         lista_pdfs=[]        
         for i in range (0,listbox_pdfs.size()):
-                lista_pdfs.append(listbox_pdfs.get(i))      
-        loguea(logbox,'Concatenando ('+str(len(lista_pdfs))+')')   
-        merger=PyPDF2.PdfFileMerger()
-        for pdf_url in lista_pdfs:
-                merger.append(PyPDF2.PdfFileReader(open(pdf_url,'rb')))
-                loguea(logbox,'.')
-        merger.write(os.path.join(head_url,tail_url))
-        loguea(logbox,'[LISTO]')
+                lista_pdfs.append(listbox_pdfs.get(i))
+        if len(lista_pdfs)>0:
+                loguea(logbox,'Concatenando ('+str(len(lista_pdfs))+') PDFS:\n')   
+                pdf = pikepdf.Pdf.new()
+                for archivo_pdf in lista_pdfs:
+                        src=pikepdf.Pdf.open(archivo_pdf)
+                        pdf.pages.extend(src.pages)
+                        loguea(logbox,'['+str(lista_pdfs.index(archivo_pdf)+1)+'] :'+str(os.path.split(archivo_pdf)[1])+'\n')
+                pdf.save(os.path.join(head_url,tail_url))
+                loguea(logbox,'...[LISTO]\n')
+                return
+        loguea(logbox,'***No se ha generado ningún pdf: Lista vacía.\n')
+        
         
 #####################################################################################
 #			TESTS :
@@ -302,7 +308,7 @@ scrollbar_logbox.config(command = logbox.yview)
 #####################################################################################
 
 
-logbox.insert(tkinter.END, licencias['gplv3'])
+loguea(logbox,licencias['gplv3'])
 entry_url.insert(tkinter.END,os.path.expanduser(os.path.normpath(os.path.join(pdf_salida_defaultdir,pdf_salida_default))))
 
 
