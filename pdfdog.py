@@ -218,6 +218,7 @@ def show_w(ventana_principal,textow):
         ventana_w.title('This program comes with ABSOLUTELY NO WARRANTY')
         ventana_w.geometry('800x600')
         tkinter.Label(ventana_w,text=textow).pack()
+        ventana_w.focus_set()
         ventana_w.bind('<Escape>', lambda event : ventana_w.destroy())
     
 
@@ -234,8 +235,8 @@ def ayuda(ventana_principal):
         """
         ventana_ayuda = tkinter.Toplevel(ventana_principal)
         ventana_ayuda.title(' Atajos y ayuda')
-        #ventana_ayuda.geometry('400x200')
         tkinter.Label(ventana_ayuda,text=texto_ayuda,justify='left').pack(side=tkinter.LEFT,padx=(0,30), pady=(10,10))
+        ventana_ayuda.focus_set()
         ventana_ayuda.bind('<Escape>', lambda event : ventana_ayuda.destroy())
         
 #####################################################################################
