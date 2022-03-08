@@ -16,8 +16,7 @@
 #   Contacto : toccicristian@hotmail.com / toccicristian@protonmail.ch
 
 licencias=dict()
-licencias['gplv3']="""
-    pdfdog.py  Copyright (C) 2022  Cristian Tocci
+licencias['gplv3']="""    pdfdog.py  Copyright (C) 2022  Cristian Tocci
     This program comes with ABSOLUTELY NO WARRANTY; for details press 'w'.
     This is free software, and you are welcome to redistribute it
     under certain conditions; See COPYING.odt file for further details.
@@ -89,9 +88,10 @@ pdf_salida_default='output.pdf'
 
 
 def loguea(logbox,linea=str()):
+        logbox.configure(state='normal')
         logbox.insert(tkinter.END, linea)
         logbox.see(tkinter.END)
-
+        logbox.configure(state='disabled')
 
 def file_browser():
         tipos=(
@@ -214,11 +214,29 @@ def pdfdog (listbox_pdf,entry_url,logbox):
         
 
 def show_w(ventana_principal,textow):
-    ventana_w = tkinter.Toplevel(ventana_principal)
-    ventana_w.title(' - ')
-    ventana_w.geometry('800x600')
-    tkinter.Label(ventana_w,text=textow).pack()
+        ventana_w = tkinter.Toplevel(ventana_principal)
+        ventana_w.title('This program comes with ABSOLUTELY NO WARRANTY')
+        ventana_w.geometry('800x600')
+        tkinter.Label(ventana_w,text=textow).pack()
+        ventana_w.bind('<Escape>', lambda event : ventana_w.destroy())
     
+
+def ayuda(ventana_principal):
+        texto_ayuda="""
+        F1 : Esta ayuda.
+        w : Más acerca de la licencia 
+        z : Agrega PDF
+        x : Quita PDF
+        u : Mueve hacia arriba los PDF seleccionados.
+        j : Mueve hacia abajo los PDF seleccionados.
+        Enter : Concatena los pdf en la lista.
+        Esc : Cierra la aplicación / Cierra esta ventana
+        """
+        ventana_ayuda = tkinter.Toplevel(ventana_principal)
+        ventana_ayuda.title(' Atajos y ayuda')
+        #ventana_ayuda.geometry('400x200')
+        tkinter.Label(ventana_ayuda,text=texto_ayuda,justify='left').pack(side=tkinter.LEFT,padx=(0,30), pady=(10,10))
+        ventana_ayuda.bind('<Escape>', lambda event : ventana_ayuda.destroy())
         
 #####################################################################################
 #			TESTS :
@@ -261,7 +279,7 @@ marco_inferior_derecho=tkinter.Frame(marco_inferior)
 listbox_pdfs = tkinter.Listbox(marco_izquierdo, selectmode="multiple")
 scrollbar_pdfs = tkinter.Scrollbar(marco_izquierdo)
 etiqueta_logbox=tkinter.Label(marco_fondo,text="Log:")
-logbox=tkinter.Text(marco_fondo,height=5,width = 95)
+logbox=tkinter.Text(marco_fondo,height=5,width = 95, state='disabled')
 scrollbar_logbox = tkinter.Scrollbar(marco_fondo)
 imagen_boton_agregar=tkinter.PhotoImage(file=os.path.normpath('./res/PDF_mas-64x64.png'))
 imagen_boton_quitar=tkinter.PhotoImage(file=os.path.normpath('./res/PDF_menos-64x64.png'))
@@ -314,14 +332,23 @@ scrollbar_logbox.config(command = logbox.yview)
 #				BINDEOS:
 #####################################################################################
 
-ventana.bind('<w>', lambda event : show_w(ventana,licencias['textow']))
 
+ventana.bind('<F1>', lambda event : ayuda(ventana))
+ventana.bind('<w>', lambda event : show_w(ventana,licencias['textow']))
+ventana.bind('<z>', lambda event : agregarpdf(listbox_pdfs,logbox))
+ventana.bind('<x>', lambda event : quitarpdf(listbox_pdfs,logbox))
+ventana.bind('<u>', lambda event : moverarriba(listbox_pdfs,logbox))
+ventana.bind('<j>', lambda event : moverabajo(listbox_pdfs,logbox))
+ventana.bind('<Return>', lambda event : pdfdog (listbox_pdfs,entry_url,logbox))
+ventana.bind('<Escape>', lambda event : ventana.destroy())
 #####################################################################################
 #				EL PROGRAMA:
 #####################################################################################
 
 
 loguea(logbox,licencias['gplv3'])
+loguea(logbox,'Presione <F1> para ayuda.\n')
+logbox.see(0.0)
 entry_url.insert(tkinter.END,os.path.expanduser(os.path.normpath(os.path.join(pdf_salida_defaultdir,pdf_salida_default))))
 
 
