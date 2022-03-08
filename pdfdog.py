@@ -18,7 +18,7 @@
 licencias=dict()
 licencias['gplv3']="""
     pdfdog.py  Copyright (C) 2022  Cristian Tocci
-    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+    This program comes with ABSOLUTELY NO WARRANTY; for details press 'w'.
     This is free software, and you are welcome to redistribute it
     under certain conditions; See COPYING.odt file for further details.
 """
@@ -212,6 +212,13 @@ def pdfdog (listbox_pdf,entry_url,logbox):
                 return
         loguea(logbox,'***No se ha generado ningún pdf: Lista vacía.\n')
         
+
+def show_w(ventana_principal,textow):
+    ventana_w = tkinter.Toplevel(ventana_principal)
+    ventana_w.title(' - ')
+    ventana_w.geometry('800x600')
+    tkinter.Label(ventana_w,text=textow).pack()
+    
         
 #####################################################################################
 #			TESTS :
@@ -302,6 +309,12 @@ scrollbar_logbox.pack(side = tkinter.RIGHT, fill = tkinter.BOTH)
 logbox.config(yscrollcommand = scrollbar_logbox.set)
 scrollbar_logbox.config(command = logbox.yview)
 
+
+#####################################################################################
+#				BINDEOS:
+#####################################################################################
+
+ventana.bind('<w>', lambda event : show_w(ventana,licencias['textow']))
 
 #####################################################################################
 #				EL PROGRAMA:
