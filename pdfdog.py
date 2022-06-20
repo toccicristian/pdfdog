@@ -82,7 +82,6 @@ from tkinter import filedialog
 import os
 import pikepdf
 
-browser_dir_inicial='~'
 pdf_salida_defaultdir='~'
 pdf_salida_default='output.pdf'
 
@@ -99,7 +98,6 @@ def file_browser():
                 ('Todos los archivos','*.*')
         )
         archivo_url = filedialog.askopenfilenames(
-                #initialdir = os.path.expanduser(os.path.normpath(browser_dir_inicial)), #esto inicia en '~' pero olvida ultimo directorio
                 title='Agregar PDF...',
                 filetypes=(tipos)
         )
@@ -111,7 +109,7 @@ def directory_browser(titulo=str(),defaultdir=str()):
                 titulo='Seleccione directorio destino...'
         directorio=filedialog.askdirectory(title=titulo)
         if not directorio:
-               directorio=defaultdir 
+               directorio=defaultdir
         return os.path.expanduser(os.path.normpath(directorio))
 
 
@@ -120,23 +118,7 @@ def agregarpdf(listbox_pdfs,logbox):
         for archivo_url in archivo_urls:
                 listbox_pdfs.insert(tkinter.END, archivo_url)
                 listbox_pdfs.see(tkinter.END)
-#                listbox_pdfs.selection_clear(0,tkinter.END)
-#                listbox_pdfs.selection_set(tkinter.END)
                 loguea(logbox,'Archivo agregado: '+str(archivo_url)+'\n')
-        #indice_insercion=tkinter.END                           # TODO : INICIO DE VOLAR ESTO A LA MIERDA
-        #print(len(listbox_pdfs.curselection()))
-        #if len(listbox_pdfs.curselection())>0:
-        #        indice_insercion=listbox_pdfs.curselection()[0]+1
-        #if archivo_url:
-        #        listbox_pdfs.insert(indice_insercion, archivo_url)
-        #        listbox_pdfs.see(indice_insercion)
-        #        listbox_pdfs.selection_clear(0,tkinter.END)
-        #        listbox_pdfs.selection_set(listbox_pdfs.curselection()[0])
-        #        if str(indice_seleccion) != tkinter.END:
-        #                listbox_pdfs.see(indice_seleccion)
-        #                listbox_pdfs.selection_clear(0,tkinter.END)
-        #                listbox_pdfs.selection_set(indice_seleccion)
-        #        loguea(logbox,'Archivo agregado: '+str(archivo_url))      #FIN DE VOLAR A LA MIERDA
 
 
 def quitarpdf(listbox_pdfs,logbox):
@@ -197,11 +179,11 @@ def pdfdog (listbox_pdf,entry_url,logbox):
         if (not head_url) or (not tail_url) or (not os.path.isdir(os.path.expanduser(os.path.normpath(head_url)))):
                 loguea(logbox,'***No se ha generado ningún pdf: Ruta de destino no válida.\n')
                 return
-        lista_pdfs=[]        
+        lista_pdfs=[]
         for i in range (0,listbox_pdfs.size()):
                 lista_pdfs.append(listbox_pdfs.get(i))
         if len(lista_pdfs)>0:
-                loguea(logbox,'Concatenando ('+str(len(lista_pdfs))+') PDFS:\n')   
+                loguea(logbox,'Concatenando ('+str(len(lista_pdfs))+') PDFS:\n')
                 pdf = pikepdf.Pdf.new()
                 for archivo_pdf in lista_pdfs:
                         src=pikepdf.Pdf.open(archivo_pdf)
@@ -211,7 +193,7 @@ def pdfdog (listbox_pdf,entry_url,logbox):
                 loguea(logbox,'...[LISTO]\n')
                 return
         loguea(logbox,'***No se ha generado ningún pdf: Lista vacía.\n')
-        
+
 
 def show_w(ventana_principal,textow):
         ventana_w = tkinter.Toplevel(ventana_principal)
@@ -220,12 +202,12 @@ def show_w(ventana_principal,textow):
         tkinter.Label(ventana_w,text=textow).pack()
         ventana_w.focus_set()
         ventana_w.bind('<Escape>', lambda event : ventana_w.destroy())
-    
+
 
 def ayuda(ventana_principal):
         texto_ayuda="""
         F1 : Esta ayuda.
-        w : Más acerca de la licencia 
+        w : Más acerca de la licencia
         z : Agrega PDF
         x : Quita PDF
         u : Mueve hacia arriba los PDF seleccionados.
@@ -238,28 +220,6 @@ def ayuda(ventana_principal):
         tkinter.Label(ventana_ayuda,text=texto_ayuda,justify='left').pack(side=tkinter.LEFT,padx=(0,30), pady=(10,10))
         ventana_ayuda.focus_set()
         ventana_ayuda.bind('<Escape>', lambda event : ventana_ayuda.destroy())
-        
-#####################################################################################
-#			TESTS :
-#####################################################################################
-def test_listbox(listbox_pdfs,logbox):
-        lista_items=[]
-        for x in range (1,36):
-                lista_items.append(x)
-        loguea(logbox,'Poblando la lista')
-        for item in lista_items:
-                listbox_pdfs.insert(tkinter.END,item)
-                loguea(logbox,'.')
-        loguea(logbox,'[OK]\n')
-
-
-def test_pdfdog(listbox_pdfs,entry_url,logbox):
-        for root,dirs,files in os.walk('./examples',topdown=False):
-                for nombre in files:
-                        listbox_pdfs.insert(tkinter.END,os.path.join(root,nombre))
-        entry_url.delete(0,tkinter.END)
-        entry_url.insert(tkinter.END, './examples/salida.pdf')
-        pdfdog (listbox_pdfs,entry_url,logbox)
 
 
 #####################################################################################
@@ -269,7 +229,7 @@ ventana=tkinter.Tk()
 ventana.title("PDF DOG")
 ventana.geometry("800x600")
 
-#               DEFINICIONES 
+#               DEFINICIONES
 marco_superior=tkinter.Frame(ventana)
 marco_inferior=tkinter.Frame(ventana)
 marco_fondo=tkinter.Frame(ventana)
@@ -353,9 +313,4 @@ logbox.see(0.0)
 entry_url.insert(tkinter.END,os.path.expanduser(os.path.normpath(os.path.join(pdf_salida_defaultdir,pdf_salida_default))))
 
 
-#test_listbox(listbox_pdfs,logbox)
-#test_pdfdog(listbox_pdfs,entry_url,logbox)
 ventana.mainloop()
-
-# TODO : trabajar sobre el show w de los argumentos
-
